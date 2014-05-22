@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # usage:
-#  $ curl https://raw.githubusercontent.com/sharow/archlinux-digitalocean/master/updater | sh - | sh -
+#  $ curl https://raw.githubusercontent.com/sharow/archlinux-digitalocean/master/updater | sh -
 #    ~~ snip ~~
 #  $ systemctl reboot
 #      and yout get lastest kernel
