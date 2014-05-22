@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 # usage:
-#  $ curl ... | sh -
+#  $ curl https://raw.githubusercontent.com/sharow/archlinux-digitalocean/master/updater | sh - | sh -
 #    ~~ snip ~~
 #  $ systemctl reboot
-#    
+#      and yout get lastest kernel
+#
 
 #
 # based on https://www.youtube.com/watch?v=LHNPTvMwHPE
