@@ -36,10 +36,10 @@ pacman -Su --noconfirm
 mv /etc/sysctl.conf.pacsave /etc/sysctl.d/99-sysctl.conf
 
 # remove IgnorePkg from pacman.conf
-sed -e 's/^IgnorePkg/#IgnorePkg/' /etc/pacman.conf
+sed -e 's/^IgnorePkg/#IgnorePkg/' /etc/pacman.conf > /dev/null
 
 # for VirtIO
-sed -e 's/^MODULES=""/MODULES="virtio virtio_blk virtio_pci virtio_net"/' /etc/mkinitcpio.conf
+sed -e 's/^MODULES=""/MODULES="virtio virtio_blk virtio_pci virtio_net"/' /etc/mkinitcpio.conf > /dev/null
 
 # update kernel
 if [ "$LTS" -eq 1 ]; then
@@ -60,7 +60,7 @@ pacman -Rc --noconfirm systemd-sysvcompat
 pacman -Scc --noconfirm
 
 # add kexec-tools to HoldPkg
-sed 's/^HoldPkg     = \(*\)/HoldPkg     = \1 kexec-tools/' /etc/pacman.conf
+sed 's/^HoldPkg     = \(*\)/HoldPkg     = \1 kexec-tools/' /etc/pacman.conf > /dev/null
 
 # init command
 pushd /sbin
@@ -74,5 +74,6 @@ EOF
 chmod 755 init
 popd
 
+echo ''
 echo 'update successful'
 echo '>>> systemctl reboot'
