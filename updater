@@ -28,6 +28,7 @@ esac
 
 # update packages first
 # and solve this: https://www.archlinux.org/news/binaries-move-to-usrbin-requiring-update-intervention/
+pacman-key --populate
 pacman -Syy
 pacman -Su --noconfirm --ignore filesystem,bash
 pacman -S --noconfirm bash
