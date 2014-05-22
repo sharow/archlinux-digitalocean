@@ -30,23 +30,24 @@ esac
 # and solve this: https://www.archlinux.org/news/binaries-move-to-usrbin-requiring-update-intervention/
 pacman -Syy
 pacman -Su --noconfirm --ignore filesystem,bash
-pacman -S  --noconfirm bash
+pacman -S --noconfirm bash
 pacman -Su --noconfirm
 
 # https://www.archlinux.org/news/deprecation-of-etcsysctlconf/
 mv /etc/sysctl.conf.pacsave /etc/sysctl.d/99-sysctl.conf
 
 # remove IgnorePkg from pacman.conf
-sed -e 's/^IgnorePkg/#IgnorePkg/' /etc/pacman.conf > /dev/null
+sed -i 's/^IgnorePkg/#IgnorePkg/' /etc/pacman.conf
 
 # for VirtIO
-sed -e 's/^MODULES=""/MODULES="virtio virtio_blk virtio_pci virtio_net"/' /etc/mkinitcpio.conf > /dev/null
+sed -i 's/^MODULES=""/MODULES="virtio virtio_blk virtio_pci virtio_net"/' /etc/mkinitcpio.conf
 
 # update kernel
-if [ "$LTS" -eq 1 ]; then
-	echo "not supported yet"; exit 0
-	pacman -Su --noconfirm linux-lts
-	pacman -Rc --noconfirm linux
+if [ "$LTS" == '1' ]; then
+	echo "not supported yet"
+	#pacman -Su --noconfirm linux-lts
+	#pacman -Rc --noconfirm linux
+	pacman -Su --noconfirm linux
 else
 	pacman -Su --noconfirm linux
 fi
@@ -61,7 +62,7 @@ pacman -Rc --noconfirm systemd-sysvcompat
 pacman -Scc --noconfirm
 
 # add kexec-tools to HoldPkg
-sed 's/^HoldPkg     = \(*\)/HoldPkg     = \1 kexec-tools/' /etc/pacman.conf > /dev/null
+sed -i 's/^HoldPkg     = \(*\)/HoldPkg     = \1 kexec-tools/' /etc/pacman.conf
 
 # init command
 pushd /sbin
