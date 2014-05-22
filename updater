@@ -18,7 +18,7 @@ fi
 # current kernel version check
 KERNEL_VER=$(uname -r)
 case "$KERNEL_VER" in
-	"3.14.4-1-ARCH")
+	"3.8.4-1-ARCH")
 		;;
 	*) echo "Not supported version!";
 		exit 0
