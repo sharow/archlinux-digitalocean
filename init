@@ -1,0 +1,7 @@
+#!/bin/sh
+
+kexec --load /boot/vmlinuz-linux --initrd=/boot/initramfs-linux.img --append="root=LABEL=DOROOT ini\
+t=/usr/lib/systemd/systemd" &&
+mount -o ro,remount / &&
+kexec -e
+exec /usr/lib/systemd/systemd
