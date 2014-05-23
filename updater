@@ -27,13 +27,16 @@ esac
 
 # update packages first
 # and solve this: https://www.archlinux.org/news/binaries-move-to-usrbin-requiring-update-intervention/
+pacman-key --refresh-keys
 pacman-key --populate
 pacman -Syy
+pacman -S --noconfirm archlinux-keyring
 pacman -R --noconfirm texinfo syslinux jfsutils ppl
 pacman -Su --noconfirm --ignore filesystem,bash
 pacman -S --noconfirm bash
 pacman -Su --noconfirm
 rm -f /boot/syslinux/syslinux.cfg.pacsave
+mv -f /etc/mkinitcpio.conf.pacnew /etc/mkinitcpio.conf
 
 # https://www.archlinux.org/news/deprecation-of-etcsysctlconf/
 mv /etc/sysctl.conf.pacsave /etc/sysctl.d/99-sysctl.conf
@@ -63,7 +66,7 @@ pacman -R --noconfirm netcfg
 pacman -S --noconfirm netctl
 IP_ADDR=$(ip addr | grep -A 2 'eth0:' | tail -n 1 | cut -c 10- | sed 's/\(.*\)\/.*/\1/')
 GATEWAY=$(route | grep default | awk '{print $2}')
-DNS="($(cat resolv.conf | awk '{printf("\"%s\" ", $2)}'))"
+DNS="($(cat /etc/resolv.conf | awk '{printf("\"%s\" ", $2)}'))"
 cat <<EOF > /etc/netctl/eth0
 Interface=eth0
 Connection=ethernet
@@ -82,7 +85,7 @@ pacman -R --noconfirm systemd-sysvcompat
 sed -i 's/^HoldPkg     = \(*\)/HoldPkg     = \1 kexec-tools/' /etc/pacman.conf
 
 # init command
-pushd /sbin
+pushd /usr/sbin
 cat <<EOF > init
 #!/bin/sh
 kexec --load /boot/vmlinuz-linux --initrd=/boot/initramfs-linux.img --append="root=LABEL=DOROOT init=/usr/lib/systemd/systemd" &&
