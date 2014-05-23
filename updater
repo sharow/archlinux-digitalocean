@@ -37,7 +37,6 @@ pacman -Su --noconfirm --ignore filesystem,bash
 pacman -S --noconfirm bash
 pacman -Su --noconfirm
 pacman -S --noconfirm fakeroot
-rm -f /boot/syslinux/syslinux.cfg.pacsave
 
 # https://www.archlinux.org/news/deprecation-of-etcsysctlconf/
 mv /etc/sysctl.conf.pacsave /etc/sysctl.d/99-sysctl.conf
@@ -58,6 +57,7 @@ locale-gen
 # cleanup /etc garbage
 rm -f /etc/fstab.test
 rm -f /etc/fstab.newtest2
+rm -f /boot/syslinux/syslinux.cfg.pacsave
 
 # for VirtIO
 sed -i 's/^MODULES=""/MODULES="virtio virtio_blk virtio_pci virtio_net"/' /etc/mkinitcpio.conf
