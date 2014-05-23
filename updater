@@ -31,7 +31,7 @@ pacman-key --refresh-keys
 pacman-key --populate
 pacman -Syy
 pacman -S --noconfirm archlinux-keyring
-pacman -R --noconfirm texinfo syslinux jfsutils ppl
+pacman -R --noconfirm texinfo jfsutils ppl
 pacman -R --noconfirm fakeroot
 pacman -Su --noconfirm --ignore filesystem,bash
 pacman -S --noconfirm bash
@@ -54,7 +54,7 @@ sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 sed -i 's/^#en_US ISO-8859-1/en_US ISO-8859-1/' /etc/locale.gen
 locale-gen
 
-# cleanup /etc garbage
+# remove garbage
 rm -f /etc/fstab.test
 rm -f /etc/fstab.newtest2
 rm -f /boot/syslinux/syslinux.cfg.pacsave
