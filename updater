@@ -29,9 +29,11 @@ esac
 # and solve this: https://www.archlinux.org/news/binaries-move-to-usrbin-requiring-update-intervention/
 pacman-key --populate
 pacman -Syy
+pacman -R --noconfirm texinfo syslinux jfsutils ppl
 pacman -Su --noconfirm --ignore filesystem,bash
 pacman -S --noconfirm bash
 pacman -Su --noconfirm
+rm -f /boot/syslinux/syslinux.cfg.pacsave
 
 # https://www.archlinux.org/news/deprecation-of-etcsysctlconf/
 mv /etc/sysctl.conf.pacsave /etc/sysctl.d/99-sysctl.conf
@@ -56,10 +58,25 @@ fi
 # http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
 ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
-# boot hack
+# replace netcfg -> netctl
+pacman -R --noconfirm netcfg
+pacman -S --noconfirm netctl
+IP_ADDR=$(ip addr | grep -A 2 'eth0:' | tail -n 1 | cut -c 10- | sed 's/\(.*\)\/.*/\1/')
+GATEWAY=$(route | grep default | awk '{print $2}')
+DNS="($(cat resolv.conf | awk '{printf("\"%s\" ", $2)}'))"
+cat <<EOF > /etc/netctl/eth0
+Interface=eth0
+Connection=ethernet
+IP=static
+Address='$IP_ADDR/24'
+Gateway='$GATEWAY'
+DNS='$DNS'
+EOF
+systemctl enable netctl@eth0
+
+# install kexec, remove sysvcompat
 pacman -S --noconfirm kexec-tools
-pacman -Rc --noconfirm systemd-sysvcompat
-pacman -Scc --noconfirm
+pacman -R --noconfirm systemd-sysvcompat
 
 # add kexec-tools to HoldPkg
 sed -i 's/^HoldPkg     = \(*\)/HoldPkg     = \1 kexec-tools/' /etc/pacman.conf
@@ -75,6 +92,8 @@ exec /usr/lib/systemd/systemd
 EOF
 chmod 755 init
 popd
+
+pacman -Scc --noconfirm
 
 echo ''
 echo 'update successful'
